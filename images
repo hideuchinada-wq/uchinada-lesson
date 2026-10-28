@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>内灘町 Leaflet入門マップ</title>
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    body { margin: 0; }
+    #map { width: 100vw; height: 100vh; }
+    .red-pin { color:#fff; background:#b44848; border:3px solid #fff;
+      width:24px; height:24px; border-radius:50% 50% 50% 0;
+      transform:rotate(-45deg); box-shadow:0 2px 7px #0005; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([36.657, 136.648], 13);
+
+    const osm = L.tileLayer(
+      'https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+      { attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>' }
+    ).addTo(map);
+
+    const station = L.marker([36.633524, 136.633933])
+      .bindPopup('<b>内灘駅</b><br>北陸鉄道浅野川線の駅です。');
+
+    const redIcon = L.divIcon({
+      className:'', html:'<div class="red-pin"></div>',
+      iconSize:[24,24], iconAnchor:[12,24]
+    });
+    const sunset = L.marker([36.659151, 136.648919], {icon:redIcon})
+      .bindPopup('道の駅内灘サンセットパーク');
+
+    const route = L.polyline([
+      [36.633524,136.633933], [36.659151,136.648919]
+    ], {color:'#196DAC', weight:4});
+
+    const features = L.layerGroup([station, sunset, route]).addTo(map);
+    L.control.layers({'基本マップ（OSM）':osm}, {'表示アイテム':features})
+      .addTo(map);
+    station.openPopup();
+  </script>
+</body>
+</html>
